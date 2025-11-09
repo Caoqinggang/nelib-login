@@ -29,8 +29,7 @@ jobs:
 
       - name: ▶️ Run login script
         env:
-          EMAIL: ${{ secrets.user }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          ACCOUNTS: ${{ secrets.ACCOUNTS }}
         run: node login.js
