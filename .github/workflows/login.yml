@@ -1,31 +1,36 @@
-name: Netlib Keepalive
+name: Auto Netlib Login Every 7 Days
 
 on:
   schedule:
-    - cron: '0 0 */30 * *'  # 每30天运行一次（时间早上8点）
-  workflow_dispatch:  # 允许手动运行
+    # 每7天运行一次（UTC时间 00:00）
+    - cron: "0 0 */14 * *"
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
-  auto_login_netlib:
+  auto-login:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+      - name: 📦 Install dependencies
+        run: |
+          npm init -y
+          npm install playwright axios form-data
 
-      - name: Install Playwright and browser
+      - name: 🧠 Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run lognin script
+      - name: ▶️ Run auto-login script
         env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-          ACCOUNTS: ${{ secrets.ACCOUNTS }}
-        run: npm start
+          EMAIL: ${{ secrets.user }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node auto-login.js
