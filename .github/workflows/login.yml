@@ -1,4 +1,4 @@
-name: Auto Netlib Login Every 7 Days
+name: Auto Netlib Login Every 14 Days
 
 on:
   schedule:
