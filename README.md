@@ -50,51 +50,6 @@
   ```
   test1@example.com:123456,test2@example.com:abcdef
   ```
-
----
-
-## 📜 GitHub Actions 配置文件
-
-保存为：  
-`.github/workflows/auto-login.yml`
-
-```yaml
-name: Auto Netlib Login Every 14 Days
-
-on:
-  schedule:
-    - cron: "0 0 */14 * *"    # 每 14 天执行一次（UTC 00:00）
-  workflow_dispatch:          # 支持手动触发
-
-jobs:
-  auto-login:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-
-      - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 📦 Install dependencies
-        run: |
-          npm init -y
-          npm install playwright axios form-data
-
-      - name: 🧠 Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: ▶️ Run login script
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-          ACCOUNTS: ${{ secrets.ACCOUNTS }}
-        run: node login.js
-```
-
 ---
 
 ## 💻 主脚本说明：`login.js`
@@ -132,34 +87,6 @@ screenshot_<用户名>_<时间戳>.png
 
 ---
 
-## 🧩 可选优化建议
-
-### 🧹 删除旧截图防止空间爆满
-可在 `login.js` 开头添加：
-```js
-fs.readdirSync('.').forEach(f => {
-  if (f.startsWith('screenshot_') && f.endsWith('.png')) fs.unlinkSync(f);
-});
-```
-
-### 📏 截图大小优化
-若不需要完整页面截图，可改为：
-```js
-await page.screenshot({ path: screenshotPath, fullPage: false });
-```
-
-### 🔁 Telegram 图片发送重试机制
-为防止网络波动，可在 `sendTelegramPhoto` 中加入三次重试逻辑：
-```js
-for (let i = 0; i < 3; i++) {
-  try {
-    await axios.post(...);
-    break;
-  } catch {
-    console.log(`第 ${i+1} 次发送失败，2 秒后重试`);
-    await new Promise(r => setTimeout(r, 2000));
-  }
-}
 ```
 
 ---
