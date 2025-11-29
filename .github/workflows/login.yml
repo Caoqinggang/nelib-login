@@ -2,7 +2,7 @@ name: Auto Netlib Login Every 14 Days
 
 on:
   schedule:
-    # 每7天运行一次（UTC时间 00:00）
+    # 每14天运行一次（UTC时间 00:00）
     - cron: "0 0 */14 * *"
   workflow_dispatch:  # 允许手动触发
 
